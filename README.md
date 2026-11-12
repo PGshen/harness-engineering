@@ -17,7 +17,7 @@
 
 ## 安装
 
-依赖：Python 3.9+、git、make、bash（Windows 请用 WSL 或 Git Bash）。
+依赖：Python 3.9+（CI 测试 3.11 和 3.13）、git、make、bash（Windows 请用 WSL 或 Git Bash）。
 
 Claude Code：
 
