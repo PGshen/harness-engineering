@@ -45,6 +45,16 @@ class ScaffoldTest(unittest.TestCase):
             if path.is_file():
                 self.assertNotIn("{{", path.read_text(encoding="utf-8", errors="ignore"), path)
 
+    def test_skips_local_junk(self) -> None:
+        junk = SKILL / "templates" / "scripts" / "__pycache__"
+        junk.mkdir(exist_ok=True)
+        (junk / "check_docs.cpython-312.pyc").write_bytes(b"{{junk")
+        try:
+            self.scaffold()
+        finally:
+            shutil.rmtree(junk)
+        self.assertFalse((self.repo / "scripts" / "__pycache__").exists())
+
     def test_never_overwrites(self) -> None:
         (self.repo / "AGENTS.md").write_text("mine\n", encoding="utf-8")
         result = self.scaffold()

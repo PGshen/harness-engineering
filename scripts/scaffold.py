@@ -21,6 +21,10 @@ from pathlib import Path
 TEMPLATES = Path(__file__).resolve().parent.parent / "templates"
 RENAMES = {"githooks": ".githooks"}
 TEXT_SUFFIXES = {".md", ".py", ".sh", ""}
+# Local junk that must never be copied into a target repository.
+IGNORED_NAMES = {".DS_Store", "Thumbs.db"}
+IGNORED_SUFFIXES = {".pyc", ".pyo"}
+IGNORED_DIRS = {"__pycache__"}
 
 
 def destination(src: Path, target: Path) -> Path:
@@ -44,7 +48,8 @@ def main() -> int:
     today = dt.date.today().isoformat()
     created, skipped = [], []
     for src in sorted(p for p in TEMPLATES.rglob("*") if p.is_file()):
-        if src.name == ".DS_Store":
+        rel_parts = src.relative_to(TEMPLATES).parts
+        if src.name in IGNORED_NAMES or src.suffix in IGNORED_SUFFIXES or any(p in IGNORED_DIRS for p in rel_parts):
             continue
         dst = destination(src, target)
         shown = dst.relative_to(target)

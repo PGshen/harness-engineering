@@ -4,12 +4,17 @@ from __future__ import annotations
 
 import importlib.util
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 SKILL = Path(__file__).resolve().parent.parent
 SCRIPT = SKILL / "templates" / "scripts" / "check_docs.py"
+
+
+# Importing the template must not leave a __pycache__ inside templates/.
+sys.dont_write_bytecode = True
 
 
 def load_module():
